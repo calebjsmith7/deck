@@ -19,10 +19,10 @@ export function PipelineParametersExecutionDetails(props: IExecutionDetailsSecti
           <dl>
             {Object.keys(parameters)
               .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-              .map(key => (
+              .map((key) => (
                 <React.Fragment key={key}>
                   <dt>{key}</dt>
-                  <dd>{parameters[key]}</dd>
+                  <dd>{parameters[key].toString()}</dd>
                 </React.Fragment>
               ))}
           </dl>

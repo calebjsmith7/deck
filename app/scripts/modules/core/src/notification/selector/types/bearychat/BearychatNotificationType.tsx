@@ -2,7 +2,7 @@ import React from 'react';
 import { FormikFormField, TextInput, Validators } from 'core/presentation';
 import { INotificationTypeCustomConfig } from 'core/domain';
 
-export class BearychatNoficationType extends React.Component<INotificationTypeCustomConfig> {
+export class BearychatNotificationType extends React.Component<INotificationTypeCustomConfig> {
   public render() {
     const { fieldName } = this.props;
     return (
@@ -10,7 +10,7 @@ export class BearychatNoficationType extends React.Component<INotificationTypeCu
         label="Email Address"
         name={fieldName ? `${fieldName}.address` : 'address'}
         validate={Validators.emailValue('Please enter a valid email address')}
-        input={props => <TextInput inputClassName={'form-control input-sm'} {...props} />}
+        input={(props) => <TextInput inputClassName={'form-control input-sm'} {...props} />}
         required={true}
       />
     );

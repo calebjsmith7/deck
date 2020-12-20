@@ -40,12 +40,22 @@ class HelmEditor extends React.Component<IArtifactEditorProps, IHelmArtifactEdit
       props.onChange(clonedArtifact);
     }
 
-    ArtifactService.getArtifactNames(TYPE, this.props.account.name).then(names => {
-      this.setState({
-        names,
-        namesLoading: false,
-      });
-    });
+    ArtifactService.getArtifactNames(TYPE, this.props.account.name).then(
+      (names) => {
+        this.setState({
+          names,
+          namesLoading: false,
+        });
+      },
+      () => {
+        this.setState({
+          names: [],
+          namesLoading: false,
+          versionsLoading: false,
+          versions: [],
+        });
+      },
+    );
   }
 
   public componentDidMount() {
@@ -55,21 +65,30 @@ class HelmEditor extends React.Component<IArtifactEditorProps, IHelmArtifactEdit
     }
   }
 
-  public componentDidUpdate(nextProps: IArtifactEditorProps) {
-    if (this.props.account.name !== nextProps.account.name) {
-      ArtifactService.getArtifactNames(TYPE, nextProps.account.name).then(names => {
-        this.setState({
-          names,
-          namesLoading: false,
-          versions: [],
-        });
-      });
+  public componentDidUpdate(prevProps: IArtifactEditorProps) {
+    if (this.props.account.name !== prevProps.account.name) {
+      ArtifactService.getArtifactNames(TYPE, this.props.account.name).then(
+        (names) => {
+          this.setState({
+            names,
+            namesLoading: false,
+            versions: [],
+          });
+        },
+        () => {
+          this.setState({
+            names: [],
+            namesLoading: false,
+            versions: [],
+          });
+        },
+      );
     }
   }
 
   public render() {
     const { artifact } = this.props;
-    const nameOptions = this.state.names.map(name => ({ value: name, label: name }));
+    const nameOptions = this.state.names.map((name) => ({ value: name, label: name }));
 
     return (
       <>
@@ -120,7 +139,7 @@ class HelmEditor extends React.Component<IArtifactEditorProps, IHelmArtifactEdit
         versions = versions.concat(artifact.version);
       }
       this.setState({
-        versions: versions.map(v => ({ label: v, value: v })),
+        versions: versions.map((v) => ({ label: v, value: v })),
         versionsLoading: false,
       });
     });

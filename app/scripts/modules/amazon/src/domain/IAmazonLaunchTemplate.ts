@@ -43,6 +43,14 @@ export interface IMetadataOptions {
   state?: 'pending' | 'applied';
 }
 
+export interface INetworkInterface {
+  deviceIndex: number;
+  groups: string[];
+  ipv6AddressCount?: number;
+  associatePublicIpAddress?: boolean;
+  ipv6Addresses?: string[];
+}
+
 export interface ITagSpecification {
   resourceType?: string;
   tagSet?: Array<{
@@ -51,10 +59,15 @@ export interface ITagSpecification {
   }>;
 }
 
+export interface ICreditSpecification {
+  cpuCredits?: string;
+}
+
 export interface ILaunchTemplateData {
   [attribute: string]: any;
   blockDeviceMappings?: IBlockDeviceMapping[];
   cpuOptions?: ICpuOptions;
+  creditSpecification?: ICreditSpecification;
   disableApiTermination?: boolean;
   ebsOptimized: boolean;
   elasticGpuSpecifications?: IElasticGpuSpecification[];
@@ -71,6 +84,7 @@ export interface ILaunchTemplateData {
   monitoring: {
     enabled: boolean;
   };
+  networkInterfaces?: INetworkInterface[];
   ramDiskId?: string;
   securityGroupIds: string[];
   securityGroups: string[];

@@ -11,15 +11,19 @@ export const TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER =
 export const name = TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER; // for backwards compatibility
 angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factory('titusServerGroupCommandBuilder', [
   '$q',
-  function($q) {
+  function ($q) {
+    function getDefaultIamProfile(application) {
+      const defaultIamProfile = TitusProviderSettings.defaults.iamProfile || '{{application}}InstanceProfile';
+      return defaultIamProfile.replace('{{application}}', application.name);
+    }
+
     function buildNewServerGroupCommand(application, defaults) {
       defaults = defaults || {};
 
       const defaultCredentials = defaults.account || TitusProviderSettings.defaults.account;
       const defaultRegion = defaults.region || TitusProviderSettings.defaults.region;
       const defaultZone = defaults.zone || TitusProviderSettings.defaults.zone;
-      let defaultIamProfile = TitusProviderSettings.defaults.iamProfile || '{{application}}InstanceProfile';
-      defaultIamProfile = defaultIamProfile.replace('{{application}}', application.name);
+      const defaultIamProfile = getDefaultIamProfile(application);
 
       const command = {
         application: application.name,
@@ -44,6 +48,7 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
           max: 1,
           desired: 1,
         },
+        targetHealthyDeployPercentage: 100,
         env: {},
         labels: {},
         containerAttributes: {},
@@ -56,6 +61,7 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
         },
         serviceJobProcesses: {},
         viewState: {
+          defaultIamProfile,
           useSimpleCapacity: true,
           usePreferredZones: true,
           mode: defaults.mode || 'create',
@@ -100,7 +106,7 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
         labels: serverGroup.labels,
         containerAttributes: serverGroup.containerAttributes,
         entryPoint: serverGroup.entryPoint,
-        iamProfile: serverGroup.iamProfile || application.name + 'InstanceProfile',
+        iamProfile: serverGroup.iamProfile,
         capacityGroup: serverGroup.capacityGroup,
         migrationPolicy: serverGroup.migrationPolicy ? serverGroup.migrationPolicy : { type: 'systemDefault' },
         securityGroups: serverGroup.securityGroups || [],
@@ -128,9 +134,11 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
           max: serverGroup.capacity.max,
           desired: serverGroup.capacity.desired,
         },
+        targetHealthyDeployPercentage: 100,
         cloudProvider: 'titus',
         selectedProvider: 'titus',
         viewState: {
+          defaultIamProfile: getDefaultIamProfile(application),
           useSimpleCapacity: serverGroup.capacity.min === serverGroup.capacity.max,
           mode: mode,
         },
@@ -172,11 +180,8 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
         imageId: pipelineCluster.imageId,
         region: pipelineCluster.region,
       };
-      const asyncLoader = $q.all({ command: buildNewServerGroupCommand(application, commandOptions) });
 
-      return asyncLoader.then(function(asyncData) {
-        const command = asyncData.command;
-
+      return buildNewServerGroupCommand(application, commandOptions).then(function (command) {
         command.constraints = {
           hard:
             (originalCluster.constraints && originalCluster.constraints.hard) ||
@@ -197,11 +202,13 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
           useSimpleCapacity: originalCluster.capacity.min === originalCluster.capacity.max,
           mode: 'editPipeline',
           submitButtonLabel: 'Done',
+          defaultIamProfile: getDefaultIamProfile(application),
         };
 
         const viewOverrides = {
           region: pipelineCluster.region,
           credentials: pipelineCluster.account,
+          iamProfile: pipelineCluster.iamProfile,
           viewState: viewState,
         };
 
@@ -212,10 +219,10 @@ angular.module(TITUS_SERVERGROUP_CONFIGURE_SERVERGROUPCOMMANDBUILDER, []).factor
     }
 
     return {
-      buildNewServerGroupCommand: buildNewServerGroupCommand,
-      buildNewServerGroupCommandForPipeline: buildNewServerGroupCommandForPipeline,
-      buildServerGroupCommandFromExisting: buildServerGroupCommandFromExisting,
-      buildServerGroupCommandFromPipeline: buildServerGroupCommandFromPipeline,
+      buildNewServerGroupCommand,
+      buildNewServerGroupCommandForPipeline,
+      buildServerGroupCommandFromExisting,
+      buildServerGroupCommandFromPipeline,
     };
   },
 ]);

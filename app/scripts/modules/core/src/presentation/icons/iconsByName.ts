@@ -7,6 +7,7 @@ import { ReactComponent as artifactApproved } from './vectors/artifactApproved.s
 import { ReactComponent as artifactBad } from './vectors/artifactBad.svg';
 import { ReactComponent as artifactPending } from './vectors/artifactPending.svg';
 import { ReactComponent as artifactSkipped } from './vectors/artifactSkipped.svg';
+import { ReactComponent as bake } from './vectors/bake.svg';
 import { ReactComponent as build } from './vectors/build.svg';
 import { ReactComponent as buildFail } from './vectors/buildFail.svg';
 import { ReactComponent as buildSuccess } from './vectors/buildSuccess.svg';
@@ -21,6 +22,7 @@ import { ReactComponent as cloudDeployed } from './vectors/cloudDeployed.svg';
 import { ReactComponent as cloudError } from './vectors/cloudError.svg';
 import { ReactComponent as cloudProgress } from './vectors/cloudProgress.svg';
 import { ReactComponent as cloudDecommissioned } from './vectors/cloudDecommissioned.svg';
+import { ReactComponent as cloudWaiting } from './vectors/cloudWaiting.svg';
 import { ReactComponent as cluster } from './vectors/cluster.svg';
 import { ReactComponent as copyClipboard } from './vectors/copyClipboard.svg';
 import { ReactComponent as done } from './vectors/done.svg';
@@ -127,6 +129,7 @@ export const iconsByName = {
   artifactBad,
   artifactPending,
   artifactSkipped,
+  bake,
   build,
   buildFail,
   buildSuccess,
@@ -146,6 +149,7 @@ export const iconsByName = {
   cloudError,
   cloudProgress,
   cloudDecommissioned,
+  cloudWaiting,
   cluster,
   config,
   configJ,

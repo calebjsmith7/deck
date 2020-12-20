@@ -28,7 +28,8 @@ const migrationPolicyOptions = [
   { label: 'Self Managed', value: 'selfManaged' },
 ];
 
-export class ServerGroupParameters extends React.Component<IServerGroupParametersProps>
+export class ServerGroupParameters
+  extends React.Component<IServerGroupParametersProps>
   implements IWizardPageComponent<ITitusServerGroupCommand> {
   private duplicateKeys: { [name: string]: boolean } = {};
 
@@ -48,6 +49,9 @@ export class ServerGroupParameters extends React.Component<IServerGroupParameter
     }
     if (this.duplicateKeys.env) {
       errors.env = 'Environment Variables have duplicate keys.';
+    }
+    if (!_values.iamProfile) {
+      errors.iamProfile = 'IAM Profile is required.';
     }
 
     const duplicateConstraints = intersection(Object.keys(softConstraints), Object.keys(hardConstraints));
@@ -72,8 +76,9 @@ export class ServerGroupParameters extends React.Component<IServerGroupParameter
 
   public render() {
     const { app } = this.props;
-    const { setFieldValue, values } = this.props.formik;
+    const { setFieldValue, values, errors } = this.props.formik;
 
+    const setDefaultIamProfile = () => setFieldValue('iamProfile', values.viewState.defaultIamProfile);
     return (
       <>
         <div className="form-group">
@@ -85,14 +90,18 @@ export class ServerGroupParameters extends React.Component<IServerGroupParameter
             <Field type="text" className="form-control input-sm no-spel" name="iamProfile" />
           </div>
           <div className="col-md-1 small" style={{ whiteSpace: 'nowrap', paddingLeft: '0px', paddingTop: '7px' }}>
-            in{' '}
-            <AccountTag
-              account={
-                values.backingData.credentialsKeyedByAccount[values.credentials] &&
-                values.backingData.credentialsKeyedByAccount[values.credentials].awsAccount
-              }
-            />
+            in <AccountTag account={values.backingData.credentialsKeyedByAccount[values.credentials]?.awsAccount} />
           </div>
+          {errors.iamProfile && (
+            <div className="col-md-8 col-md-offset-4">
+              <div className="flex-container-h baseline">
+                <span className="error-message">{errors.iamProfile}</span>
+                <button className="link" onClick={setDefaultIamProfile}>
+                  Apply default value
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         <div className="form-group">
           <div className="col-md-4 sm-label-right">

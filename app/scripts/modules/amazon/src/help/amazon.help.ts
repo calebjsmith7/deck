@@ -59,6 +59,13 @@ const helpContents: { [key: string]: string } = {
     '(Optional) <b>Detail</b> is a string of free-form alphanumeric characters and hyphens to describe any other variables.',
   'aws.serverGroup.imageName':
     '(Required) <b>Image</b> is the deployable Amazon Machine Image. Images are restricted to the account and region selected.',
+  'aws.serverGroup.unlimitedCpuCredits': `<p>CPU credits can be configured with 2 modes:</p><br/>
+      <ul>
+        <li><b>Unlimited (i.e. Unlimited On)</b>: Can sustain high CPU utilization for any period of time whenever required.<br/>
+            If the average CPU usage over a rolling 24-hour period exceeds the baseline, charges for surplus credits will apply.</li>
+        <li><b>Standard (i.e. Unlimited Off)</b>: <b>Default mode in Spinnaker.</b> Suited to workloads with an average CPU utilization that is consistently below the baseline CPU utilization of the instance.<br/>
+            To burst above the baseline, the instance spends credits that it has accrued in its CPU credit balance.</li>
+      </ul>`,
   'aws.serverGroup.legacyUdf': `<p>(Optional) <b>User Data Format</b> allows overriding of the format used when generating user data during deployment. The default format used is configured
       in the application's attributes, editable via the 'Config' tab.</p>
       <p><b>Default</b> will use the value from the application's configuration.</p>
@@ -68,6 +75,8 @@ const helpContents: { [key: string]: string } = {
   'aws.serverGroup.base64UserData': '(Optional) <b>UserData</b> is a base64 encoded string.',
   'aws.serverGroup.enabledMetrics':
     '(Optional) <b>Enabled Metrics</b> are the Auto Scaling Group metrics to enable on this group. Existing metrics are not modified.',
+  'aws.serverGroup.imdsv2':
+    "(Recommended) <b>IMDSv2</b> helps mitigate AWS credential theft from the exploitation of SSRF vulnerabilities in web applications. All modern AWS SDKs support IMDSv2 and it should not be disabled unless you're using a legacy SDK.",
   'aws.serverGroup.instanceMonitoring':
     '(Optional) <b>Instance Monitoring</b> whether to enable detailed monitoring of instances. Group metrics must be disabled to update an ASG with Instance Monitoring set to false.',
   'aws.serverGroup.tags': '(Optional) <b>Tags</b> are propagated to the instances in this cluster.',
@@ -176,4 +185,4 @@ const helpContents: { [key: string]: string } = {
         </p>`,
 };
 
-Object.keys(helpContents).forEach(key => HelpContentsRegistry.register(key, helpContents[key]));
+Object.keys(helpContents).forEach((key) => HelpContentsRegistry.register(key, helpContents[key]));

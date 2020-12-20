@@ -4,15 +4,22 @@ module.exports = {
   plugins: ['@typescript-eslint', '@spinnaker/eslint-plugin', 'react-hooks'],
   extends: ['eslint:recommended', 'prettier', 'prettier/@typescript-eslint', 'plugin:@typescript-eslint/recommended'],
   rules: {
+    '@spinnaker/api-deprecation': 2,
+    '@spinnaker/api-no-slashes': 2,
+    '@spinnaker/api-no-unused-chaining': 2,
     '@spinnaker/import-from-alias-not-npm': 2,
     '@spinnaker/import-from-npm-not-alias': 2,
     '@spinnaker/import-from-npm-not-relative': 2,
     '@spinnaker/import-relative-within-subpackage': 2,
+    '@spinnaker/migrate-to-mock-http-client': 2,
     '@spinnaker/ng-no-component-class': 2,
     '@spinnaker/ng-no-module-export': 2,
     '@spinnaker/ng-no-require-angularjs': 2,
     '@spinnaker/ng-no-require-module-deps': 2,
     '@spinnaker/ng-strictdi': 2,
+    '@spinnaker/prefer-promise-like': 1,
+    '@spinnaker/react2angular-with-error-boundary': 2,
+    '@spinnaker/rest-prefer-static-strings-in-initializer': 2,
     indent: 'off',
     'member-ordering': 'off',
     'no-console': ['error', { allow: ['warn', 'error'] }],
@@ -44,6 +51,9 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-var-requires': 'off', // TODO: turn on once all code is using ES6 imports
     '@typescript-eslint/triple-slash-reference': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
   overrides: [
     {

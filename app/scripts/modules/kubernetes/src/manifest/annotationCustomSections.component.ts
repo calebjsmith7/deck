@@ -47,7 +47,7 @@ class KubernetesAnnotationCustomSections implements IController {
     );
     // Sort section contents such that text entries appear before HTML entries.
     this.customSections = Object.keys(customSections).reduce((memo: ICustomSectionMap, sectionTitle: string) => {
-      const entriesHtmlText = partition(customSections[sectionTitle], section => section.isHtml);
+      const entriesHtmlText = partition(customSections[sectionTitle], (section) => section.isHtml);
       memo[sectionTitle] = entriesHtmlText[1].concat(entriesHtmlText[0]);
       return memo;
     }, {});
@@ -59,7 +59,7 @@ class KubernetesAnnotationCustomSections implements IController {
       return null;
     }
     if (this.resource && content.includes('{{')) {
-      content = this.$interpolate(content)({ ...this.resource });
+      content = this.$interpolate(content)({ ...this.resource, manifest: this.manifest });
     }
     return {
       title: parsed.title.replace(/-/g, ' ').trim(),

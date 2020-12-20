@@ -1,28 +1,13 @@
 <div class="details-panel">
-  <div ng-if="ctrl.state.loading" class="header">
-    <div class="close-button">
-      <a class="btn btn-link" ui-sref="^">
-        <span class="glyphicon glyphicon-remove"></span>
-      </a>
-    </div>
-    <h4 class="text-center">
-      <span us-spinner="{radius:20, width:6, length: 12}"></span>
-    </h4>
-  </div>
-
-  <div class="header" ng-if="!ctrl.state.loading">
-    <div class="close-button">
-      <a class="btn btn-link" ui-sref="^">
-        <span class="glyphicon glyphicon-remove"></span>
-      </a>
-    </div>
-    <div class="header-text horizontal middle">
-      <cloud-provider-logo provider="ctrl.instance.cloudProvider" height="'36px'" width="'36px'"></cloud-provider-logo>
-      <h3 class="horizontal middle space-between flex-1" select-on-dbl-click>
-        {{ctrl.instance.displayName}}
-      </h3>
-    </div>
-    <div class="actions">
+  <div class="header">
+    <instance-details-header
+      cloud-provider="ctrl.instance.cloudProvider"
+      health-state="instance.healthState"
+      instance-id="ctrl.instance.displayName"
+      loading="ctrl.state.loading"
+      standalone="false"
+    ></instance-details-header>
+    <div class="actions" ng-if="!ctrl.state.loading">
       <div class="dropdown" uib-dropdown dropdown-append-to-body>
         <button type="button" class="btn btn-sm btn-primary dropdown-toggle" uib-dropdown-toggle>
           {{ctrl.instance.kind | robotToHuman}} Actions <span class="caret"></span>
@@ -51,7 +36,7 @@
         <dt>Kind</dt>
         <dd>{{ctrl.instance.kind}}</dd>
         <dt>QOS Class</dt>
-        <dd><kubernetes-manifest-qos manifest="ctrl.instance.manifest"></kubernetes-manifest-qos></dd>
+        <dd><kubernetes-manifest-qos manifest="ctrl.manifest.manifest"></kubernetes-manifest-qos></dd>
         <dt>Logs</dt>
         <dd>
           <console-output-link instance="ctrl.consoleOutputInstance" uses-multi-output="true"></console-output-link>
@@ -65,7 +50,7 @@
     </collapsible-section>
 
     <kubernetes-annotation-custom-sections
-      manifest="ctrl.instance.manifest"
+      manifest="ctrl.manifest.manifest"
       resource="ctrl.instance"
     ></kubernetes-annotation-custom-sections>
 
@@ -75,13 +60,13 @@
 
     <collapsible-section heading="Resources" expanded="true">
       <kubernetes-manifest-resources
-        manifest="ctrl.instance.manifest"
+        manifest="ctrl.manifest.manifest"
         metrics="ctrl.manifest.metrics"
       ></kubernetes-manifest-resources>
     </collapsible-section>
 
     <collapsible-section heading="Labels" expanded="true">
-      <kubernetes-manifest-labels manifest="ctrl.instance.manifest"></kubernetes-manifest-labels>
+      <kubernetes-manifest-labels manifest="ctrl.manifest.manifest"></kubernetes-manifest-labels>
     </collapsible-section>
   </div>
 </div>
